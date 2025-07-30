@@ -9,7 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 
 # Mostrar o cargar los datos
-#ds = pd.read_csv("dataset_financiero_riesgo.csv")
+ds = pd.read_csv("dataset_financiero_riesgo.csv")
 
 # Colocar un titulo principal en la página Web
 st.title("Predicción de Riesgo Financiero")
@@ -68,6 +68,66 @@ st.bar_chart(importancia_ds.set_index("Característica"))
 
 # Formulario de predicción
 st.subheader("Formulario de Predicción")
-with st.form:
+with st.form("formulario"):
     ingresos = st.number_input("Ingresos mensuales", min_value=0.0, max_value=3000.0)
-    gastos = st.number_input("Gastos mensuales")
+    gastos = st.number_input("Gastos mensuales", min_value=0.0, max_value=2000.0)
+    deudas = st.slider("Deudas Activas",0, 5, 2)
+    historial = st.selectbox("Historial Credito",["Bueno", "Regular","Malo"])
+    edad = st.slider("Edad",21,64,30)
+    tarjeta = st.radio("¿Tiene tarjeta de crédito?", [0,1])
+    educacion = st.selectbox("Nivel de Educación", ["Básico","Medio", "Superior"])
+    inversiones = st.slider("Inversiones Activas", 0,3,1)
+    
+    # Crear un boton que nos diga: "Predecir"
+    submit = st.form_submit_button("Predecir")
+    
+    if submit:
+        historial_cod = le.fit(ds["Historial_Credito"]).transform(historial)[0]
+        educacion_cod = le.fit(ds["Nivel_Educacion"]).transform(educacion)[0]
+        entrada = pd.DataFrame([[ingresos, gastos, deudas, historial_cod, edad, tarjeta,educacion_cod, inversiones]], columns=x.columns)
+        
+        pred = modelo.predict(entrada)[0]
+        riesgo={0:"Alto", 1:"Bajo", 2:"Medio"}.get(pred,"Desconocido")
+        st.success(f"Nivel de Riesgo Financiero de acuerdo a la prediccion:{riesgo}")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
